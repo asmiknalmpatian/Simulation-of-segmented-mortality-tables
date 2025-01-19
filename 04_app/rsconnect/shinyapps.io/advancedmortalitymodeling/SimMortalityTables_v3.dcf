@@ -1,0 +1,10 @@
+name: SimMortalityTables_v3
+title:
+username: advancedmortalitymodeling
+account: advancedmortalitymodeling
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13708545
+bundleId: 9643165
+url: https://advancedmortalitymodeling.shinyapps.io/SimMortalityTables_v3/
+version: 1
