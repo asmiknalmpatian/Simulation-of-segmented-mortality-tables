@@ -1,6 +1,4 @@
-<div style="float: right;">
-  <img src="simplified_demographic_logo.jpg" alt="Logo" width="200">
-</div>
+
 
 # Simulated mortality tables
 
