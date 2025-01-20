@@ -1,13 +1,11 @@
-library(shiny)
-library(tidyverse)
-library(DT)
+
 
 function(input, output, session) {
   # Update state choices dynamically based on selected country
   observeEvent(input$country, {
     available_states <- simulation_results %>%
-      filter(Country_code == input$country) %>%
-      pull(State) %>%
+      filter(country == input$country) %>%
+      pull(state) %>%
       unique() %>%
       sort()
     
@@ -22,23 +20,23 @@ function(input, output, session) {
     
     data <- simulation_results %>%
       filter(
-        Country_code == input$country,
-        Age >= input$age[1],
-        Age <= input$age[2],
-        Gender %in% input$gender,
-        Smoker %in% input$smoker
+        country == input$country,
+        age >= input$age[1],
+        age <= input$age[2],
+        gender %in% input$gender,
+        smoker %in% input$smoker
       )
     
     # Filter by state only if a specific state is selected
     if (input$state != "All States") {
-      data <- data %>% filter(State == input$state)
+      data <- data %>% filter(state == input$state)
     } else {
       data <- data %>%
-        group_by(Age, Smoker, Gender, Iteration) %>%
+        group_by(age, smoker, gender, iteration) %>% # Sum across states
         summarize(
-          SimulatedDeaths = sum(SimulatedDeaths, na.rm = TRUE),
-          Population = sum(Population, na.rm = TRUE),
-          SimulatedRates = ifelse(Population > 0, SimulatedDeaths / Population, 0),  # Avoid division by zero
+          simulated_deaths = sum(simulated_deaths),
+          population = sum(population),
+          simulated_rates = simulated_deaths / population, 
           .groups = "drop"
         )
     }
@@ -49,15 +47,17 @@ function(input, output, session) {
   # Generate plot
   output$deathPlot <- renderPlot({
     aggregated_data <- filtered_data() %>%
-      group_by(Age, Smoker, Gender) %>%
+      group_by(age, smoker, gender) %>%
       summarize(
-        MeanRates = mean(SimulatedRates, na.rm = TRUE),
-        LowerCI = quantile(SimulatedRates, 0.025, na.rm = TRUE),
-        UpperCI = quantile(SimulatedRates, 0.975, na.rm = TRUE),
+        mean_rates = mean(simulated_deaths / population), # Average across iterations
+        sd_deaths = sd(simulated_deaths / population),
+        total_deaths = sum(simulated_deaths / population),
+        lower_ci = quantile(simulated_deaths / population, 0.025),
+        upper_ci = quantile(simulated_deaths / population, 0.975),
         .groups = "drop"
       )
     
-    p <- ggplot(aggregated_data, aes(x = Age, y = MeanRates, color = Smoker, linetype = Gender, group = interaction(Smoker, Gender))) +
+    p <- ggplot(aggregated_data, aes(x = age, y = mean_rates, color = smoker, linetype = gender, group = interaction(smoker, gender))) +
       geom_line(size = 1) +
       labs(
         title = "Simulated Mortality Rates",
@@ -71,7 +71,7 @@ function(input, output, session) {
     
     if (input$show_ci == "yes") {
       p <- p +
-        geom_ribbon(aes(ymin = LowerCI, ymax = UpperCI, fill = Smoker, group = interaction(Smoker, Gender)), alpha = 0.2, linetype = 0) +
+        geom_ribbon(aes(ymin = lower_ci, ymax = upper_ci, fill = smoker, group = interaction(smoker, gender)), alpha = 0.2, linetype = 0) +
         guides(fill = guide_legend(title = "Smoker 95%-CI"))
     }
     
@@ -80,13 +80,13 @@ function(input, output, session) {
   
   # Show the table with data used for the plot (without CI)
   output$dataTable <- DT::renderDataTable({
- 
-      filtered_data() %>%
-      group_by(Age, Smoker, Gender) %>%
+    
+    filtered_data() %>%
+      group_by(age, smoker, gender) %>%
       summarize(
-        `Sim. Rate` = round(mean(SimulatedRates, na.rm = TRUE), 6),
-        `Lower CI` = round(quantile(SimulatedRates, 0.025, na.rm = TRUE), 6),
-        `Upper CI` = round(quantile(SimulatedRates, 0.975, na.rm = TRUE), 6),
+        simulated_rates = round(mean(simulated_rates, na.rm = TRUE), 6),
+        lower_ci = round(quantile(simulated_rates, 0.025, na.rm = TRUE), 6),
+        upper_ci = round(quantile(simulated_rates, 0.975, na.rm = TRUE), 6),
         .groups = "drop"
       ) %>% 
       DT::datatable(
@@ -105,7 +105,7 @@ function(input, output, session) {
     },
     content = function(file) {
       write_csv(filtered_data() %>%
-                  select(Age, Smoker, Gender, SimulatedDeaths, Population, SimulatedRates), file)  # Exclude CI columns here too
+                  select(age, smoker, gender, simulated_deaths, population, simulated_rates), file)  # Exclude CI columns here too
     }
   )
   

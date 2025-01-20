@@ -1,15 +1,16 @@
 # Deploy app
+setwd("D:/UNI/06_Promotion/4_Paper_Simulation/Simulation-of-segmented-mortality-tables")
 
 library(rsconnect)
-rsconnect::setAccountInfo(name='advancedmortalitymodeling', 
-                          token='AA7AA516DC0139A5F6E1D162C84EAA1C', 
-                          secret='ddZLiS5ik1gqy1oNLvtJh2/hImh6MzeGWymTZ9KY')
+rsconnect::setAccountInfo(name='...', 
+                          token='...', 
+                          secret='...')
  
-shiny::runApp('D:/UNI/06_Promotion/4_Paper_Simulation/app') 
+shiny::runApp('./04_app') 
 
-rsconnect::deployApp('D:/UNI/06_Promotion/4_Paper_Simulation/app', appName = "SimMortalityTables_v9")
+rsconnect::deployApp('./04_app', appName = "simulate_mortality_tables_v1")
 
-# rsconnect::terminateApp(appName = "SimMortalityTables_v9")
-# rsconnect::showLogs(appName = "SimMortalityTables_v9")
+# rsconnect::terminateApp(appName = "simulate_mortality_tables_v4")
+# rsconnect::showLogs(appName = "simulate_mortality_tables_v1")
 # rsconnect::listBundleFiles('D:/UNI/06_Promotion/4_Paper_Simulation/app')
  

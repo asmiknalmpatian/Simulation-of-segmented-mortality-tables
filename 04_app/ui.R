@@ -18,12 +18,12 @@ fluidPage(
     column(3, 
            div(class = "sidebar",
                h4("Filter Options"),
-               selectInput("country", "Select Country:", choices = unique(simulation_results$Country_code), selected = "Germany (insured)"),
+               selectInput("country", "Select Country:", choices = unique(simulation_results$country), selected = "Germany (insured)"),
                selectInput("state", "Select State:", choices = NULL), # Dynamically loaded states
-               sliderInput("age", "Select Age Range:", min = min(simulation_results$Age), max = max(simulation_results$Age), value = c(30, 70)),
-               selectInput("gender", "Select Gender(s):", choices = unique(simulation_results$Gender), selected = unique(simulation_results$Gender), multiple = TRUE),
-               selectInput("smoker", "Select Smoking Status:", choices = unique(simulation_results$Smoker), selected = unique(simulation_results$Smoker), multiple = TRUE),
-               radioButtons("show_ci", "Show Confidence Interval:", choices = c("With CI" = "yes", "Without CI" = "no"), selected = "no")
+               sliderInput("age", "Select Age Range:", min = min(simulation_results$age), max = max(simulation_results$age), value = c(30, 70)),
+               selectInput("gender", "Select Gender:", choices = unique(simulation_results$gender), selected = unique(simulation_results$gender), multiple = TRUE),
+               selectInput("smoker", "Select Smoking Status:", choices = unique(simulation_results$smoker), selected = unique(simulation_results$smoker), multiple = TRUE),
+               radioButtons("show_ci", "Show Confidence Interval:", choices = c("With 95%-CI" = "yes", "Without 95%-CI" = "no"), selected = "no")
            )
     ),
     column(9,

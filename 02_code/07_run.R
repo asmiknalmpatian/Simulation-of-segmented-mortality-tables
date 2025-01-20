@@ -178,6 +178,7 @@ print(result_che_ins$plot)
 
 simulated_results_full <- combine_country_analysis(result_de, result_ita, result_che_pop)
 write_csv(simulated_results_full, "./03_results/simulated_results_full.csv")
+write_csv(simulated_results_full, "./04_app/data/simulated_results_full.csv")
 
 combined_results <- simulated_results_full %>% 
   group_by(country, age, gender, smoker, state) %>%

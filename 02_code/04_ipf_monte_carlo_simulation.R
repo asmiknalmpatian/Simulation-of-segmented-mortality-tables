@@ -129,7 +129,7 @@ run_ipf_monte_carlo_simulation <- function(country_code, population_file, deaths
   aggregated_results <- simulation_results %>%
     group_by(smoker, gender, state, age) %>%
     summarize(
-      mean_deaths = mean(simulated_deaths / population),
+      mean_rates = mean(simulated_deaths / population),
       sd_deaths = sd(simulated_deaths / population),
       total_deaths = sum(simulated_deaths / population),
       lower_ci = quantile(simulated_deaths / population, 0.025),
@@ -138,7 +138,7 @@ run_ipf_monte_carlo_simulation <- function(country_code, population_file, deaths
     )
   
   # Visualization
-  gg <- ggplot(aggregated_results, aes(x = age, y = mean_deaths, color = smoker, group = smoker)) +
+  gg <- ggplot(aggregated_results, aes(x = age, y = mean_rates, color = smoker, group = smoker)) +
     geom_line(size = 1) +
     geom_ribbon(aes(ymin = lower_ci, ymax = upper_ci, fill = smoker), alpha = 0.2) +
     facet_wrap(~gender + state, scales = "free_y") +
