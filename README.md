@@ -1,3 +1,7 @@
+<div style="float: right;">
+  <img src="simplified_demographic_logo.jpg" alt="Logo" width="200">
+</div>
+
 # Simulated mortality tables
 
 We provide simulated mortality tables for the insured population in Germany, Italy, and Switzerland, segmented by age, gender, smoker status, and state. The data adheres to high privacy standards, going beyond basic segmentation. The code allows for reproduction and extension of simulations to other countries and segmentation variables.
@@ -27,6 +31,7 @@ The simulated dataset can be found in the `03_results` folder and dynamically ac
 ## Notes
 
 - Ensure the `03_results` folder is accessible for outputs.
+- R version used is 4.4.2.
 - Extend and modify functions as needed for additional segmentation variables or countries.
 - The insured mortality tables used in the study are:
   - **Germany**: [Raucher- und Nichtrauchersterbetafeln für Lebensversicherungen mit Todesfallcharakter](https://aktuar.de/de/wissen/fachinformationen/detail/raucher-und-nichtrauchersterbetafeln-fuer-lebensversicherungen-mit-todesfallcharakter/)
