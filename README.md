@@ -1,7 +1,5 @@
-
-
-# Simulated mortality tables
-
+# Simulated mortality tables <img src="logo.png" align="right" width="200"/>
+ 
 We provide simulated mortality tables for the insured population in Germany, Italy, and Switzerland, segmented by age, gender, smoker status, and state. The data adheres to high privacy standards, going beyond basic segmentation. The code allows for reproduction and extension of simulations to other countries and segmentation variables.
 
 ## Objective
