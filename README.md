@@ -30,8 +30,8 @@ The simulated dataset can be found in the `03_results` folder and dynamically ac
 - R version used is 4.4.2.
 - Extend and modify functions as needed for additional segmentation variables or countries.
 - The insured mortality tables used in the study are:
-  - **Germany**: [Raucher- und Nichtrauchersterbetafeln für Lebensversicherungen mit Todesfallcharakter](https://aktuar.de/de/wissen/fachinformationen/detail/raucher-und-nichtrauchersterbetafeln-fuer-lebensversicherungen-mit-todesfallcharakter/)
-  - **Italy**: [Studio ANIA su nuove basi demografiche](https://www.ordineattuari.it/articoli/news/2014/2/studio-ania-su-nuove-basi-demografiche/)
+  - **Germany**: [German Institute of Actuaries (DAV)](https://aktuar.de/de/wissen/fachinformationen/detail/raucher-und-nichtrauchersterbetafeln-fuer-lebensversicherungen-mit-todesfallcharakter/)
+  - **Italy**: [Association of Italian Insurance Companies (ANIA)](https://www.ordineattuari.it/articoli/news/2014/2/studio-ania-su-nuove-basi-demografiche/)
 - For detailed usage, refer to the code comments or reach out to the repository maintainers.
 
 
