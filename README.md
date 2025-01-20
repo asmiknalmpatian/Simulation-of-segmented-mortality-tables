@@ -8,7 +8,7 @@ The overall objective is to create a robust framework for simulating and analyzi
 
 ## Outcomes
 
-The simulated dataset can be found in the `03_results` folder and dynamically accessed in the [dashboard](https://advancedmortalitymodeling.shinyapps.io/simulate_mortality_tables_v1/).
+The simulated dataset can be found in the `03_results` folder. The results are also available for review and download through an interactive [Shiny app dashboard](https://advancedmortalitymodeling.shinyapps.io/simulate_mortality_tables_v1/).
 
 ---
 ## Overview of main functions
