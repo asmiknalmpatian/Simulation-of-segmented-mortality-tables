@@ -2,25 +2,26 @@
 simulation_results <- read_csv("./03_results/simulated_results_aggregated.csv")
 population_mortality <- read_csv("./01_data/population_mortality/population_mortality.csv") 
 
-insured_rates <- rbind(
+base_rates <- rbind(
   read_delim("./01_data/de_input/de_dav_rates.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE, 
-             locale = locale(encoding = 'ISO-8859-1', decimal_mark = ",")) ,
+             locale = locale(encoding = 'ISO-8859-1', decimal_mark = ",")) %>% 
+    rename(base_rates = insured_rates) ,
   read_delim("./01_data/ita_input/ita_rates_smoker.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE, 
              locale = locale(encoding = 'ISO-8859-1', decimal_mark = ",")) %>% 
-    rename(insured_rates = rates),
-  read_delim("./01_data/che_input/che_rates_smoker_ins.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE, 
+    rename(base_rates = rates), 
+  read_delim("./01_data/che_input/che_rates_smoker_pop.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE, 
              locale = locale(encoding = 'ISO-8859-1', decimal_mark = ",")) %>% 
-    rename(insured_rates =rates)
+    rename(base_rates =rates) 
 )
 
 final_results <- simulation_results %>%
   mutate(country = ifelse(country == "Germany (insured)", "DE", ifelse(country == "Italy (insured)", "ITA", "CHE"))) %>% 
   left_join(population_mortality, by = c("country", "age", "gender")) %>%
-  left_join(insured_rates, by = c("country", "age", "gender", "smoker")) %>%
+  left_join(base_rates, by = c("country", "age", "gender", "smoker")) %>%
   mutate(
     simulated_deaths = simulated_population * simulated_rates,
     population_deaths = simulated_population * population_rates,
-    insured_deaths = simulated_population * insured_rates
+    base_deaths = simulated_population * base_rates
   )
 
 # Visualize all rates --------
@@ -36,7 +37,7 @@ plot_country_rates <- function(country_name, data, aggregate_by_smoker = TRUE) {
       Population = sum(simulated_population),
       simulated_deaths = sum(simulated_deaths),
       population_deaths = sum(population_deaths),
-      insured_deaths = sum(insured_deaths),
+      base_deaths = sum(base_deaths),
       .groups = "drop"
     ) %>%
     filter(age %in% 20:70)
@@ -46,13 +47,13 @@ plot_country_rates <- function(country_name, data, aggregate_by_smoker = TRUE) {
     mutate(
       simulated_rates = simulated_deaths / Population,
       population_rates = population_deaths / Population,
-      insured_rates = insured_deaths / Population
+      base_rates = base_deaths / Population
     )
   
   # Reshape data for plotting
   data_long <- plot_data %>%
     pivot_longer(
-      cols = c(simulated_rates, population_rates, insured_rates),
+      cols = c(simulated_rates, population_rates, base_rates),
       names_to = "Rate_Type",
       values_to = "Rate"
     )
@@ -68,14 +69,14 @@ plot_country_rates <- function(country_name, data, aggregate_by_smoker = TRUE) {
       values = c(
         "simulated_rates" = "dashed",   # Dashed for simulated_rates
         "population_rates" = "solid",  # Solid for population_rates
-        "insured_rates" = "dotted"    # Dotted for insured_rates
+        "base_rates" = "dotted"    # Dotted for base_rates
       )
     ) +
     scale_color_manual(
       values = c(
         "simulated_rates" = "orangered3",   # Blue for simulated_rates
         "population_rates" = "gray33",  # Red for population_rates
-        "insured_rates" = "royalblue2"    # Green for insured_rates
+        "base_rates" = "royalblue2"    # Green for base_rates
       )
     ) +
     labs(
