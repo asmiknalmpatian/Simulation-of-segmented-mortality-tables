@@ -43,6 +43,7 @@ result_de <- run_ipf_monte_carlo_simulation(
 print(result_de$country_code)
 head(result_de$simulation_results)
 print(result_de$plot)
+ggsave("de_states_mortality.jpg", width = 15, height = 12)
 
 # 2. Italy (insured) ----------------------------------------------------------------
 
@@ -61,6 +62,8 @@ ita_rates_smoker <- expand_mortality_table_ipf_smoker(data = ita_ania_rates,
 
 head(ita_rates_smoker$adjusted_data)
 print(ita_rates_smoker$plot)
+ggsave("ita_smoker_mortality_disaggregation.jpg", width = 8, height = 6)
+
 
 write.table(ita_rates_smoker$adjusted_data, "./01_data/ita_input/ita_rates_smoker.csv", sep = ";", row.names = FALSE, col.names = TRUE, quote = FALSE, dec = ",") 
 
@@ -84,6 +87,7 @@ result_ita <- run_ipf_monte_carlo_simulation(
 print(result_ita$country_code)
 head(result_ita$simulation_results)
 print(result_ita$plot)
+ggsave("ita_states_mortality.jpg", width = 15, height = 12)
 
 # 3. Switzerland (population) ----------------------------------------------------------
 
@@ -103,6 +107,7 @@ che_rates_smoker_pop <- expand_mortality_table_ipf_smoker(data = population_mort
 
 head(che_rates_smoker_pop$adjusted_data)
 print(che_rates_smoker_pop$plot)
+ggsave("che_smoker_mortality_disaggregation.jpg", width = 8, height = 6)
 
 write.table(che_rates_smoker_pop$adjusted_data, "./01_data/che_input/che_rates_smoker_pop.csv", sep = ";", row.names = FALSE, col.names = TRUE, quote = FALSE, dec = ",") 
  
@@ -126,34 +131,27 @@ result_che_pop <- run_ipf_monte_carlo_simulation(
 print(result_che_pop$country_code)
 head(result_che_pop$simulation_results)
 print(result_che_pop$plot)
+ggsave("che_states_mortality.jpg", width = 15, height = 12)
+
 
 
 # 4. Switzerland (insured*) ----------------------------------------------------------
 
 
 # 1. Transform the basic mortality table from CHE to from insured to population data. Assumption: CHE and DE have similar ratio between insured and overall population mortality.
+# We use age, gender and smoker relation
 
 pred_insured_mortality_che <- population2insured(
   target_country = "CHE",  # Specify the target country
   source_country = "DE", # Specify the assumption of similar ratio insured vs. overall population mortality
-  population_mortality_path = "./01_data/population_mortality/population_mortality.csv"
+  population_mortality_path = "./01_data/population_mortality/population_mortality.csv",
+  output_path = "./01_data/che_input/che_rates_smoker_ins.csv"
 )
 
 print(pred_insured_mortality_che$plot)
+ggsave("che_pop2insured.jpg", width = 8, height = 6) 
 
-# 2. Extend insured mortality table from age-gender to age-gender-smoker distinction
-
-che_rates_smoker_ins <- expand_mortality_table_ipf_smoker(data = pred_insured_mortality_che$pred,
-                                                          smoker_hazard = 0.01099, 
-                                                          non_smoker_hazard = 0.00286, 
-                                                          subtitle = "Swiss, predicted insured, source = HMD & DAV*")
-
-head(che_rates_smoker_ins$adjusted_data)
-print(che_rates_smoker_ins$plot)
-
-write.table(che_rates_smoker_ins$adjusted_data, "./01_data/che_input/che_rates_smoker_ins.csv", sep = ";", row.names = FALSE, col.names = TRUE, quote = FALSE, dec = ",") 
-
-# 3. Run simulation with IPF-extended population and Monte Carlo
+# 2. Run simulation with IPF-extended population and Monte Carlo
 
 result_che_ins <- run_ipf_monte_carlo_simulation(
   country_code = "Switzerland (insured*)",
@@ -194,9 +192,13 @@ write_csv(combined_results, "./03_results/simulated_results_aggregated.csv")
 # Visual evaluation ----------------------------------------------------------------
 
 plot_country_rates(country_name = "DE", data = final_results, aggregate_by_smoker = T)
-plot_country_rates(country_name = "ITA", data = final_results, aggregate_by_smoker = T)
-plot_country_rates(country_name = "CHE", data = final_results, aggregate_by_smoker = T)
+ggsave("de_base_pop_sim_S_NS.jpg", width = 8, height = 6)
 
+plot_country_rates(country_name = "ITA", data = final_results, aggregate_by_smoker = T)
+ggsave("ita_base_pop_sim_S_NS.jpg", width = 8, height = 6)
+
+plot_country_rates(country_name = "CHE", data = final_results, aggregate_by_smoker = T)
+ggsave("che_base_pop_sim_S_NS.jpg", width = 8, height = 6)  
 
 # Tests -------------------------------------------------------------------
 
