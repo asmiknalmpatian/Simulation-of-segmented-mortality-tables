@@ -8,7 +8,7 @@ The overall objective is to create a robust framework for simulating and analyzi
 
 ## Outcomes
 
-The simulated dataset can be found in the `03_results` folder. The results are also available for review and download through an interactive [Shiny app dashboard](https://advancedmortalitymodeling.shinyapps.io/simulate_mortality_tables_v1/). A summary of the study is available in a preprint paper on arXiv titled [Mortality simulations for insured and general populations] https://arxiv.org/abs/2502.08814v1.
+The simulated dataset can be found in the `03_results` folder. The results are also available for review and download through an interactive [Shiny app dashboard](https://advancedmortalitymodeling.shinyapps.io/simulate_mortality_tables_v1/). For a comprehensive overview of the study, refer to the preprint paper on arXiv: [Mortality simulations for insured and general populations](https://arxiv.org/abs/2502.08814v1/).
 
 ---
 ## Overview of main functions
